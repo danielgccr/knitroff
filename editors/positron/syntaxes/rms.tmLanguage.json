@@ -1,0 +1,167 @@
+{
+  "name": "R troff",
+  "scopeName": "text.roff.rms",
+  "comment": "knitroff .Rms: troff with the ms macros, R chunks between .SS and .SE, `r expr` and .SR",
+  "patterns": [
+    {
+      "include": "#chunk"
+    },
+    {
+      "include": "#sr"
+    },
+    {
+      "include": "#vignette"
+    },
+    {
+      "include": "#eqn"
+    },
+    {
+      "include": "#comment"
+    },
+    {
+      "include": "#request"
+    },
+    {
+      "include": "#inline"
+    },
+    {
+      "include": "#escape"
+    }
+  ],
+  "repository": {
+    "chunk": {
+      "begin": "^(\\.SS)(?=\\s|$)(.*)$",
+      "beginCaptures": {
+        "1": {
+          "name": "keyword.control.chunk.rms"
+        },
+        "2": {
+          "name": "meta.chunk-options.rms",
+          "patterns": [
+            {
+              "include": "source.r"
+            }
+          ]
+        }
+      },
+      "end": "^(\\.SE)\\s*$",
+      "endCaptures": {
+        "1": {
+          "name": "keyword.control.chunk.rms"
+        }
+      },
+      "contentName": "meta.embedded.block.r",
+      "patterns": [
+        {
+          "include": "source.r"
+        }
+      ]
+    },
+    "sr": {
+      "match": "^(\\.SR)\\s+(\\S+)\\s+(.*)$",
+      "captures": {
+        "1": {
+          "name": "keyword.control.chunk.rms"
+        },
+        "2": {
+          "name": "variable.other.string.rms"
+        },
+        "3": {
+          "name": "meta.embedded.inline.r",
+          "patterns": [
+            {
+              "include": "source.r"
+            }
+          ]
+        }
+      }
+    },
+    "vignette": {
+      "match": "^\\s*%\\s*\\\\Vignette.*$",
+      "name": "comment.line.vignette.rms"
+    },
+    "eqn": {
+      "begin": "^(\\.EQ)\\b.*$",
+      "end": "^(\\.EN)\\b.*$",
+      "beginCaptures": {
+        "1": {
+          "name": "entity.name.function.request.roff"
+        }
+      },
+      "endCaptures": {
+        "1": {
+          "name": "entity.name.function.request.roff"
+        }
+      },
+      "contentName": "markup.raw.eqn.roff",
+      "patterns": [
+        {
+          "include": "#comment"
+        }
+      ]
+    },
+    "comment": {
+      "patterns": [
+        {
+          "match": "^[.']\\s*\\\\\\\".*$",
+          "name": "comment.line.roff"
+        },
+        {
+          "match": "\\\\[\\\"#].*$",
+          "name": "comment.line.roff"
+        }
+      ]
+    },
+    "request": {
+      "begin": "^([.'])\\s*([A-Za-z][A-Za-z0-9_]*|\\S\\S?)",
+      "end": "$",
+      "beginCaptures": {
+        "1": {
+          "name": "punctuation.definition.request.roff"
+        },
+        "2": {
+          "name": "entity.name.function.request.roff"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#comment"
+        },
+        {
+          "include": "#inline"
+        },
+        {
+          "include": "#escape"
+        },
+        {
+          "match": "\"[^\"]*\"?",
+          "name": "string.quoted.double.roff"
+        }
+      ]
+    },
+    "inline": {
+      "begin": "(`r)(?= )",
+      "end": "`",
+      "beginCaptures": {
+        "1": {
+          "name": "punctuation.section.embedded.begin.rms"
+        }
+      },
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.section.embedded.end.rms"
+        }
+      },
+      "contentName": "meta.embedded.inline.r",
+      "patterns": [
+        {
+          "include": "source.r"
+        }
+      ]
+    },
+    "escape": {
+      "match": "\\\\(?:[fFn*gkmMV$Y][+-]?(?:\\[[^\\]]*\\]|\\(..|.)|\\(..|\\[[^\\]]*\\]|[hvwlLDXoNRZbxHSAB]'[^']*'|s[+-]?\\d+|.)",
+      "name": "constant.character.escape.roff"
+    }
+  }
+}

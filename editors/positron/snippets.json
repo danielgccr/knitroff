@@ -1,0 +1,10 @@
+{
+  "R chunk": { "prefix": "ss", "body": [".SS $1", "$0", ".SE"], "description": "R code between .SS and .SE" },
+  "R string": { "prefix": "sr", "body": [".SR ${1:name} ${2:expr}"], "description": "the troff string \\*[name], set to the value of expr" },
+  "Figure chunk": {
+    "prefix": "fig",
+    "body": [".SS ${1:label}, fig.cap=\"${2:Caption}\", echo=FALSE", "$0", ".SE"],
+    "description": "an R chunk that draws a numbered figure"
+  },
+  "Equation": { "prefix": "eq", "body": [".EQ", "$0", ".EN"], "description": "an eqn equation" }
+}

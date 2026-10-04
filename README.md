@@ -194,14 +194,27 @@ A package can't bind keys, so bind them once in **Tools → Modify Keyboard Shor
 for "troff"). Ctrl+Shift+Alt+I and Ctrl+Shift+Alt+K are free and sit next to RStudio's own
 Ctrl+Alt+I and Ctrl+Shift+K; reusing those would take them away from `.Rmd` files.
 
-In VS Code or Positron, a snippet does the first: add it to your user snippets, or to
-`.vscode/knitroff.code-snippets` in a project, then type `ss` and Tab:
+### Positron and VS Code
 
-```json
-{ "knitroff chunk": { "scope": "", "prefix": "ss", "body": [".SS $1", "$0", ".SE"] } }
-```
+[Positron](https://positron.posit.co/), Posit's newer editor for R, can learn a language, so
+there knitroff has full support from a small extension in `editors/positron`:
 
-In Vim or Neovim, the `nroff` syntax works: `vim.filetype.add({ extension = { Rms = "nroff" } })`.
+- **Highlighting:** requests such as `.PP`, escapes such as `\fB` and `\*[name]`, comments
+  and eqn blocks; the R in chunks, in `` `r expr` `` and in `.SR` is highlighted as R.
+- **Ctrl+Alt+I** (Cmd+Option+I) inserts a chunk, around the selection if there is one.
+  Snippets: `ss` (chunk), `fig` (figure chunk), `sr` (`.SR`), `eq` (equation).
+- **Ctrl+Shift+K** (Cmd+Shift+K), or the PDF button in the editor's title bar, saves the
+  document, runs `render_roff()` in the R console and opens the PDF.
+
+These keys apply only in `.Rms` files. To install, download
+[`knitroff-rms-0.1.0.vsix`](https://github.com/danielgccr/knitroff/raw/master/editors/positron/knitroff-rms-0.1.0.vsix),
+then in Positron run **Extensions: Install from VSIX...** from the Command Palette
+(Ctrl+Shift+P) and choose the file. It works the same in VS Code, where rendering runs
+`Rscript`.
+
+### Vim and Neovim
+
+The `nroff` syntax works: `vim.filetype.add({ extension = { Rms = "nroff" } })`.
 A chunk is a mapping away: `vim.keymap.set("i", "<C-A-i>", ".SS<CR><CR>.SE<Up>")`.
 
 ## Vignettes

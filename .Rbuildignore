@@ -4,3 +4,4 @@
 ^\.gitattributes$
 ^\.gitignore$
 ^tools$
+^editors$

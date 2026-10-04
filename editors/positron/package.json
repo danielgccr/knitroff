@@ -1,0 +1,45 @@
+{
+  "name": "knitroff-rms",
+  "displayName": "knitroff: R troff documents",
+  "description": "Highlighting, chunk insertion and rendering for knitroff's .Rms documents: troff with the ms macros and R chunks.",
+  "version": "0.1.0",
+  "publisher": "danielgccr",
+  "license": "MIT",
+  "repository": { "type": "git", "url": "https://github.com/danielgccr/knitroff" },
+  "engines": { "vscode": "^1.75.0" },
+  "categories": ["Programming Languages"],
+  "main": "./extension.js",
+  "contributes": {
+    "languages": [{
+      "id": "rms",
+      "aliases": ["R troff", "rms"],
+      "extensions": [".Rms", ".rms"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "rms",
+      "scopeName": "text.roff.rms",
+      "path": "./syntaxes/rms.tmLanguage.json",
+      "embeddedLanguages": { "meta.embedded.block.r": "r", "meta.embedded.inline.r": "r" }
+    }],
+    "commands": [{
+      "command": "knitroff.render",
+      "title": "Render troff document",
+      "category": "knitroff",
+      "icon": "$(file-pdf)"
+    }],
+    "menus": {
+      "editor/title": [{ "command": "knitroff.render", "when": "resourceLangId == rms", "group": "navigation" }],
+      "commandPalette": [{ "command": "knitroff.render", "when": "editorLangId == rms" }]
+    },
+    "keybindings": [
+      { "command": "knitroff.render", "key": "ctrl+shift+k", "mac": "cmd+shift+k", "when": "editorLangId == rms" },
+      {
+        "command": "editor.action.insertSnippet", "key": "ctrl+alt+i", "mac": "cmd+alt+i",
+        "when": "editorTextFocus && editorLangId == rms",
+        "args": { "snippet": ".SS$1\n${TM_SELECTED_TEXT}$0\n.SE" }
+      }
+    ],
+    "snippets": [{ "language": "rms", "path": "./snippets.json" }]
+  }
+}
