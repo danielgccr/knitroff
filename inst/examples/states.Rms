@@ -1,0 +1,56 @@
+.TL
+Life expectancy in the states, 1977
+.AU
+A. Student
+.AI
+Bell Laboratories
+Murray Hill, New Jersey
+.AB
+A first look at life expectancy in the 50 states, with the state.x77
+data that comes with R, as it came with S.
+Every number, listing and figure in this report was computed by R
+while the report was being formatted, by knitroff.
+.AE
+.SR lo min(state.x77[, "Life Exp"])
+.SR hi max(state.x77[, "Life Exp"])
+.SR mn round(mean(state.x77[, "Life Exp"]), 2)
+.SR sd round(sd(state.x77[, "Life Exp"]), 2)
+.NH
+The data
+.PP
+In 1977 life expectancy ranged from \*[lo] to \*[hi] years,
+with a mean of \*[mn] years and a standard deviation of \*[sd].
+The summaries and a stem-and-leaf display come straight from R:
+.SS summaries
+life <- state.x77[, "Life Exp"]   # years, for 1969-71
+mean(life); median(life)
+sd(life)
+stem(life)
+.SE
+.PP
+The standard deviation is the square root of the sample variance
+.EQ
+s sup 2 ~=~ 1 over {n - 1} sum from i=1 to n ( x sub i - x bar ) sup 2
+.EN
+which is what \f(CRvar\fP computes.
+.NH
+Life expectancy and income
+.PP
+Richer states tend to live longer, up to a point.
+A scatter plot with Cleveland's lowess smooth shows the shape:
+.SS scatter, fig.cap="Life expectancy against income, with a lowess smooth.", fig.height=4
+income <- state.x77[, "Income"]
+plot(income, life, xlab = "Income", ylab = "Life expectancy", pch = 20)
+lines(lowess(income, life))   # Cleveland's smoother, 1979
+.SE
+.PP
+The correlation is only `r round(cor(income, life), 2)`: the smooth rises with income,
+then levels off, and one rich, outlying state pulls its right end down.
+.NH
+The longest and shortest lives
+.SS extremes, echo=FALSE
+o <- order(life)
+knitroff::roff_table(data.frame(State = state.name[o], Income = income[o], "Life expectancy" = life[o],
+                                check.names = FALSE)[c(1:3, 48:50), ],
+                     caption = "The three shortest and three longest lives")
+.SE

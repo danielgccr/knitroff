@@ -1,0 +1,6 @@
+.Rhistory
+.RData
+*.Rcheck/
+knitroff_*.tar.gz
+.env
+.env.*
