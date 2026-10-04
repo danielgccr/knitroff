@@ -76,5 +76,8 @@ if (nzchar(Sys.which("groff"))) {
   )
   pdf <- render_roff(example, format = "pdf")
   stopifnot(identical(readBin(pdf, "raw", 4), charToRaw("%PDF")))
+  # a path with ~, as typed at the console: R expands it, the shell would not in quotes
+  Sys.setenv(HOME = dir)
+  stopifnot(file.exists(render_roff("~/t.Rms", format = "ps")), file.exists(file.path(dir, "t.ps")))
 }
 cat("knitroff: tests passed\n")

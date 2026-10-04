@@ -249,6 +249,7 @@ render_roff <- function(input, output = NULL, format = c("pdf", "ps", "utf8"), h
   }
   ext <- c(pdf = ".pdf", ps = ".ps", utf8 = ".txt")[[format]]
   if (is.null(output)) output <- sub("\\.[^.]*$", ext, input)
+  output <- path.expand(output)  # the shell quotes it for groff, and won't expand ~ in quotes
   ms <- knit_roff(input, sub("\\.[^.]*$", ".ms", output), format = format, highlight = highlight)
   args <- c("-ms", "-k", if (format != "utf8") "-e", "-t", "-p", if (format == "pdf") "-U", paste0("-T", format), shQuote(ms))
   status <- system2(groff, args, stdout = output)
