@@ -58,6 +58,12 @@ stopifnot(!any(grepl("Vignette", readLines(knit_roff(vig, format = "utf8")))))
 code <- readLines(knitroff:::tangle_roff(doc))
 stopifnot(code[1] == "x <- c(1, -2, 3)", length(code) == 7)
 
+# the RStudio addin's chunk: wrap a selection, fill a blank line, or go below text
+ci <- knitroff:::chunk_insert
+stopifnot(identical(ci(c("a", "b"), 1, 2, TRUE), list(text = c(".SS", "a", "b", ".SE"), cursor = 2)),
+          identical(ci(c("x", ""), 2, 2, FALSE), list(text = c(".SS", "", ".SE"), cursor = 3)),
+          identical(ci(c(".PP", ""), 1, 1, FALSE), list(text = c(".PP", ".SS", "", ".SE"), cursor = 3)))
+
 if (nzchar(Sys.which("groff"))) {
   example <- file.path(dir, "states.Rms")
   file.copy(system.file("examples", "states.Rms", package = "knitroff"), example)

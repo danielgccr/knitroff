@@ -1,0 +1,9 @@
+Name: Insert troff chunk
+Description: Wraps the selected lines in .SS and .SE, or inserts an empty chunk at the cursor.
+Binding: insert_chunk_addin
+Interactive: false
+
+Name: Render troff document
+Description: Saves the .Rms document, typesets it to PDF with render_roff() and opens the PDF.
+Binding: render_addin
+Interactive: false

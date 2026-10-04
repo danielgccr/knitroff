@@ -48,8 +48,41 @@ remotes::install_github("danielgccr/knitroff")
 
 knitroff needs **GNU groff** 1.22 or later to typeset: `render_roff()`. Most Linux
 systems have it; on macOS, which switched its man pages to mandoc, install it with
-`brew install groff`; on Windows, use WSL. Figures in PDF need `pdfinfo` from poppler.
+`brew install groff`; on Windows, see [below](#windows). Figures in PDF need `pdfinfo`
+from poppler.
 `knit_roff()`, which only writes the troff, needs neither.
+
+### Windows
+
+groff runs on Windows through MSYS2, and R users already have MSYS2 inside
+[Rtools](https://cran.r-project.org/bin/windows/Rtools/). groff (1.24.1) is in MSYS2's
+`msys` sub-repository, which is the one CRAN's Rtools instructions say may be added to it.
+In the **Rtools45 bash** shell (`C:\rtools45\msys2.exe` or the Start menu):
+
+```
+pacman -Sy groff
+```
+
+This also installs Perl, which groff's PDF driver needs. R puts Rtools' tools on its
+`PATH`, so check in R:
+
+```r
+Sys.which("groff")   # e.g. "C:\\rtools45\\usr\\bin\\groff.exe"
+```
+
+If it comes back empty, give the path: `render_roff("report.Rms", groff = "C:/rtools45/usr/bin/groff.exe")`.
+
+That is enough for PDF and PostScript with listings, equations and tables, and for the
+terminal draft. **Figures in PDF** also need `pdfinfo` from poppler, and MSYS2 packages
+poppler in its `ucrt64` sub-repository, which Rtools warns against mixing in. Get it
+another way:
+
+- **A separate MSYS2** (`C:\msys64`): `pacman -S groff mingw-w64-ucrt-x86_64-poppler`,
+  then use that groff and put `C:\msys64\ucrt64\bin` on `PATH` for `pdfinfo`.
+- **[Scoop](https://scoop.sh/)**: `scoop install poppler`, with groff from Rtools.
+- **WSL**: Linux on Windows, where knitroff works as it does on Linux.
+
+`knit_roff()` needs neither groff nor poppler, so writing the troff works anywhere.
 
 ## Writing a document
 
@@ -119,6 +152,18 @@ the way you'd say it aloud:
 s sup 2 ~=~ 1 over {n - 1} sum from i=1 to n ( x sub i - x bar ) sup 2
 ```
 
+## Reference
+
+The R help has a complete reference for writing knitroff documents, taken from the groff
+manuals and marking which features are extensions to the 1979 Seventh Edition:
+
+| Help page | Covers |
+|---|---|
+| `?ms` | every ms macro (`.TL`, `.PP`, `.NH`, `.IP`, `.DS`, `.FS`, …), register and string |
+| `?troff` | requests (`.sp`, `.ce`, `.ft` …), escapes (`\fB`, `\*[name]` …), units, special characters |
+| `?eqn` | the equation language: `sub`, `sup`, `over`, `sqrt`, `from`, `to`, matrices, Greek |
+| `?tbl` | tables: options, column formats, data, text blocks |
+
 ## Functions
 
 | Function | What it does |
@@ -135,8 +180,29 @@ interfere with other knitr documents in the same session.
 
 The repository's `.gitattributes` tells GitHub to show `.Rms` files as Roff, so they are
 highlighted there. RStudio's editor knows `.Rnw` and `.Rmd` but not `.Rms`, and has no way
-to add a language, so it opens them as plain text; run `render_roff()` from its console.
+to add a language, so it opens them as plain text, where its Insert Chunk shortcut and Knit
+button do nothing.
+
+knitroff gives RStudio two addins in their place, in the **Addins** menu:
+
+| Addin | What it does |
+|---|---|
+| Insert troff chunk | wraps the selected lines in `.SS` and `.SE`, or inserts an empty chunk at the cursor |
+| Render troff document | saves the `.Rms` file, runs `render_roff()` and opens the PDF |
+
+A package can't bind keys, so bind them once in **Tools → Modify Keyboard Shortcuts** (search
+for "troff"). Ctrl+Shift+Alt+I and Ctrl+Shift+Alt+K are free and sit next to RStudio's own
+Ctrl+Alt+I and Ctrl+Shift+K; reusing those would take them away from `.Rmd` files.
+
+In VS Code or Positron, a snippet does the first: add it to your user snippets, or to
+`.vscode/knitroff.code-snippets` in a project, then type `ss` and Tab:
+
+```json
+{ "knitroff chunk": { "scope": "", "prefix": "ss", "body": [".SS $1", "$0", ".SE"] } }
+```
+
 In Vim or Neovim, the `nroff` syntax works: `vim.filetype.add({ extension = { Rms = "nroff" } })`.
+A chunk is a mapping away: `vim.keymap.set("i", "<C-A-i>", ".SS<CR><CR>.SE<Up>")`.
 
 ## Vignettes
 
@@ -170,8 +236,9 @@ knitroff::render_roff("states.Rms")
 
 ## Limitations
 
-- groff is required to typeset, so CRAN's Windows machines can't render; `knit_roff()`
-  works everywhere.
+- groff is required to typeset. CRAN's Windows check machines have Rtools but not groff,
+  so the tests skip rendering there; `knit_roff()` works everywhere. On your own Windows
+  machine, see [Windows](#windows).
 - PDF figures run groff with `-U` (unsafe mode), because `.PDFPIC` asks `pdfinfo` for each
   picture's size. Render only documents you trust.
 - The terminal draft shows equations as eqn source and figures as boxes to paste into.

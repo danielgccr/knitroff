@@ -10,5 +10,6 @@ Description: Write reports in 'troff' with the 'ms' macros and R code chunks
 License: MIT + file LICENSE
 Encoding: UTF-8
 Imports: knitr
+Suggests: rstudioapi
 SystemRequirements: GNU groff (>= 1.22) for render_roff(); pdfinfo (poppler)
     for figures in PDF output

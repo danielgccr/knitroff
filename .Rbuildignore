@@ -3,3 +3,4 @@
 ^docs$
 ^\.gitattributes$
 ^\.gitignore$
+^tools$
