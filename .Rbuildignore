@@ -5,3 +5,4 @@
 ^\.gitignore$
 ^tools$
 ^editors$
+^cran-comments\.md$
