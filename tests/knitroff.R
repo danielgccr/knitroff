@@ -44,6 +44,8 @@ stopifnot("> x <\\- \\f(CBNULL\\f(CR  \\f(CI# it\\(aqs empty\\f(CR" %in% h,
 h <- readLines(knit_roff(hl, format = "utf8", highlight = FALSE))
 stopifnot(!any(grepl("\\f(C[BI]", h, fixed = TRUE)))
 
+# no blank lines after chunks: troff reads one as .sp, and at a page's foot it starts a page
+stopifnot(!any(ms == ""))
 # the code and output of a chunk are one listing
 stopifnot(sum(ms == ".DS L") == 1)
 # the table goes into the document as troff, untouched

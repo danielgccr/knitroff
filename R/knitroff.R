@@ -83,7 +83,7 @@ gather <- function(x) {
     part <- lines[(end[k] - runs$lengths[k] + 1):end[k]]
     out <- c(out, if (runs$values[k]) c(".DS L", ".ft CR", substring(part, 2), ".ft", ".DE") else part)
   }
-  paste0(paste(out, collapse = "\n"), "\n")
+  paste(out, collapse = "\n")  # knitr ends the line; a blank line would be troff's .sp
 }
 
 #' Set knitr's hooks to write troff
