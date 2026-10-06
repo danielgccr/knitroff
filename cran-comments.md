@@ -18,3 +18,4 @@
 ## Test environments
 
 * Arch Linux, R 4.6.1, groff 1.24.1
+* win-builder, R-devel (2026-10-05 r90641 ucrt), Windows, without groff: 1 NOTE (new submission)
