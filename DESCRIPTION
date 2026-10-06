@@ -2,7 +2,7 @@ Package: knitroff
 Type: Package
 Title: Dynamic Reports in 'troff' with 'knitr'
 Version: 0.1.0
-Authors@R: person("Daniel", "García", email = "pesfan@gmail.com", role = c("aut", "cre"))
+Authors@R: person("Daniel", "García", email = "danielgarcarrasco@gmail.com", role = c("aut", "cre"))
 Description: Write reports in 'troff' with the 'ms' macros and R code chunks
     between '.SS' and '.SE', the way 'eqn' and 'tbl' blocks sit in a document,
     and turn them into PDF, PostScript or a terminal draft with GNU 'groff'.
