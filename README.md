@@ -47,7 +47,8 @@ remotes::install_github("danielgccr/knitroff")
 ```
 
 knitroff needs **GNU groff** 1.22 or later to typeset: `render_roff()`. Most Linux
-systems have it; on macOS, which switched its man pages to mandoc, install it with
+systems have it, though Debian and Ubuntu may have only `groff-base`, which has no ms
+macros: `sudo apt install groff`; on macOS, which switched its man pages to mandoc, install it with
 `brew install groff`; on Windows, see [below](#windows). Figures in PDF need `pdfinfo`
 from poppler.
 `knit_roff()`, which only writes the troff, needs neither.
@@ -171,6 +172,7 @@ manuals and marking which features are extensions to the 1979 Seventh Edition:
 | `render_roff(input, output, format = "pdf", highlight = TRUE)` | knits, then typesets with groff: `"pdf"`, `"ps"` or `"utf8"` |
 | `knit_roff(input, output, format = "pdf", highlight = TRUE)` | knits to plain troff (`.ms`) only; no groff needed |
 | `roff_table(x, caption, digits)` | a data frame as a `tbl` table |
+| `groff_available(format)` | whether groff here can typeset that format with the ms macros |
 | `hooks_roff()` | knitr's output hooks for troff, for driving `knitr::knit()` yourself |
 
 `knit_roff()` restores knitr's patterns, hooks and options when it finishes, so it doesn't
@@ -249,9 +251,10 @@ knitroff::render_roff("states.Rms")
 
 ## Limitations
 
-- groff is required to typeset. CRAN's Windows check machines have Rtools but not groff,
-  so the tests skip rendering there; `knit_roff()` works everywhere. On your own Windows
-  machine, see [Windows](#windows).
+- groff is required to typeset, in full: Debian and Ubuntu install `groff-base` for man
+  pages, which has no ms macros, so install the `groff` package. `groff_available()` says
+  whether this machine can typeset; the tests skip rendering where it can't, as on CRAN's
+  check machines. `knit_roff()` works everywhere. On Windows, see [Windows](#windows).
 - PDF figures run groff with `-U` (unsafe mode), because `.PDFPIC` asks `pdfinfo` for each
   picture's size. Render only documents you trust.
 - The terminal draft shows equations as eqn source and figures as boxes to paste into.

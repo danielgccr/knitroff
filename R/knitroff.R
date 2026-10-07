@@ -244,15 +244,39 @@ eqn_source <- function(body) {
 render_roff <- function(input, output = NULL, format = c("pdf", "ps", "utf8"), highlight = TRUE,
                         groff = "groff") {
   format <- match.arg(format)
-  if (!nzchar(Sys.which(groff))) {
-    stop("groff not found: install GNU groff, or use knit_roff() for the troff source alone")
+  if (!groff_available(format, groff)) {
+    stop("groff can't typeset ", format, " with the ms macros: install GNU groff in full ",
+         "(on Debian and Ubuntu, the 'groff' package: 'groff-base' has no ms macros), ",
+         "or use knit_roff() for the troff source alone")
   }
   ext <- c(pdf = ".pdf", ps = ".ps", utf8 = ".txt")[[format]]
   if (is.null(output)) output <- sub("\\.[^.]*$", ext, input)
   output <- path.expand(output)  # the shell quotes it for groff, and won't expand ~ in quotes
   ms <- knit_roff(input, sub("\\.[^.]*$", ".ms", output), format = format, highlight = highlight)
-  args <- c("-ms", "-k", if (format != "utf8") "-e", "-t", "-p", if (format == "pdf") "-U", paste0("-T", format), shQuote(ms))
-  status <- system2(groff, args, stdout = output)
+  status <- system2(groff, c(groff_args(format), shQuote(ms)), stdout = output)
   if (!identical(status, 0L)) stop("groff failed (exit status ", status, ") on ", ms)
   invisible(output)
+}
+
+# The ms macros, UTF-8 input, and the eqn, tbl and pic preprocessors.
+groff_args <- function(format) {
+  c("-ms", "-k", if (format != "utf8") "-e", "-t", "-p", if (format == "pdf") "-U", paste0("-T", format))
+}
+
+#' Can groff typeset a document here?
+#'
+#' Runs groff on an empty ms document, as [render_roff()] would, without output. Finding
+#' the groff program isn't enough: Debian's `groff-base`, installed for man pages, has no
+#' ms macros and no PDF driver.
+#'
+#' @inheritParams render_roff
+#' @return `TRUE` or `FALSE`.
+#' @export
+groff_available <- function(format = c("pdf", "ps", "utf8"), groff = "groff") {
+  format <- match.arg(format)
+  if (!nzchar(Sys.which(groff))) return(FALSE)
+  status <- suppressWarnings(
+    system2(groff, c(groff_args(format), "-z"), input = "", stdout = FALSE, stderr = FALSE)
+  )
+  identical(status, 0L)
 }

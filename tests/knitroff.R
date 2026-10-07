@@ -1,4 +1,4 @@
-# Plain checks, run by R CMD check. The groff parts skip themselves when groff is missing.
+# Plain checks, run by R CMD check. The groff parts skip themselves when groff can't typeset.
 library(knitroff)
 
 dir <- tempfile("knitroff")
@@ -66,9 +66,19 @@ stopifnot(identical(ci(c("a", "b"), 1, 2, TRUE), list(text = c(".SS", "a", "b", 
           identical(ci(c("x", ""), 2, 2, FALSE), list(text = c(".SS", "", ".SE"), cursor = 3)),
           identical(ci(c(".PP", ""), 1, 1, FALSE), list(text = c(".PP", ".SS", "", ".SE"), cursor = 3)))
 
-if (nzchar(Sys.which("groff"))) {
-  example <- file.path(dir, "states.Rms")
-  file.copy(system.file("examples", "states.Rms", package = "knitroff"), example)
+# a groff without the ms macros, like Debian's groff-base, is not enough to typeset
+if (.Platform$OS.type == "unix") {
+  base <- file.path(dir, "groff-base")
+  writeLines(c("#!/bin/sh", "echo \"troff: fatal error: cannot open macro file named in '-m' command-line argument 's'\" >&2", "exit 4"), base)
+  Sys.chmod(base, "755")
+  stopifnot(!groff_available("utf8", groff = base))
+  e <- tryCatch(render_roff(doc, format = "utf8", groff = base), error = conditionMessage)
+  stopifnot(grepl("groff-base", e))
+}
+
+example <- file.path(dir, "states.Rms")
+invisible(file.copy(system.file("examples", "states.Rms", package = "knitroff"), example))
+if (groff_available("utf8")) {
   draft <- readLines(render_roff(example, format = "utf8"))
   plain <- gsub("\033\\[[0-9;]*m", "", draft)
   stopifnot(
@@ -76,8 +86,12 @@ if (nzchar(Sys.which("groff"))) {
     any(grepl("> life <- state.x77[, \"Life Exp\"]", plain, fixed = TRUE)),
     any(grepl("s sup 2 ~=~ 1 over {n - 1}", plain, fixed = TRUE))
   )
+}
+if (groff_available("pdf") && nzchar(Sys.which("pdfinfo"))) {        # the example has a figure
   pdf <- render_roff(example, format = "pdf")
   stopifnot(identical(readBin(pdf, "raw", 4), charToRaw("%PDF")))
+}
+if (groff_available("ps")) {
   # a path with ~, as typed at the console: R expands it, the shell would not in quotes
   Sys.setenv(HOME = dir)
   stopifnot(file.exists(render_roff("~/t.Rms", format = "ps")), file.exists(file.path(dir, "t.ps")))

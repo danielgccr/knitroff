@@ -21,7 +21,9 @@ comments in the listings, or plain with \code{FALSE}.}
 \item{groff}{The groff program.}
 }
 \details{
-Needs GNU groff. PDF output uses groff's \code{gropdf}; figures in it need \code{pdfinfo}
+Needs GNU groff in full; \code{\link{groff_available}} says whether this machine has it.
+On Debian and Ubuntu that is the \verb{groff} package: \verb{groff-base}, installed for
+man pages, has no ms macros. PDF output uses groff's \code{gropdf}; figures in it need \code{pdfinfo}
 from poppler, and groff runs with \code{-U} because \code{.PDFPIC} asks \code{pdfinfo} for
 each picture's size. A terminal cannot set equations, so the \code{"utf8"} draft shows
 their eqn source, which was designed to read the way it is spoken.
@@ -33,7 +35,7 @@ package README describes other ways to get it.
 }
 \value{The path of the result, invisibly.}
 \examples{
-if (nzchar(Sys.which("groff"))) {
+if (groff_available("utf8")) {
   doc <- file.path(tempdir(), "states.Rms")
   file.copy(system.file("examples", "states.Rms", package = "knitroff"), doc, overwrite = TRUE)
   draft <- render_roff(doc, format = "utf8")

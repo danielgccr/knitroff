@@ -10,3 +10,5 @@
 * A vignette engine, `knitroff::roff`, for `.Rms` vignettes.
 * Reference help pages for writing documents: `?ms`, `?troff`, `?eqn` and `?tbl`.
 * RStudio addins to insert a chunk and to render the open document.
+* `groff_available()` tells whether groff can typeset here: finding the program is not
+  enough, since Debian's `groff-base` has no ms macros.

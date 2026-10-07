@@ -1,3 +1,4 @@
+export(groff_available)
 export(hooks_roff)
 export(knit_roff)
 export(render_roff)
