@@ -6,8 +6,7 @@ Authors@R: person("Daniel", "García", email = "danielgarcarrasco@gmail.com", ro
 Description: Write reports in 'troff' with the 'ms' macros and R code chunks
     between '.SS' and '.SE', the way 'eqn' and 'tbl' blocks sit in a document,
     and turn them into PDF, PostScript or a terminal draft with GNU 'groff'.
-    'knitr' runs the code, and its results can also go into the text, from R
-    expressions in backquotes or from '.SR' lines.
+    'knitr' runs the code, and its results can also be placed in the text.
 License: MIT + file LICENSE
 URL: https://github.com/danielgccr/knitroff
 BugReports: https://github.com/danielgccr/knitroff/issues
