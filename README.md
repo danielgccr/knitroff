@@ -1,5 +1,7 @@
 # knitroff
 
+[![CRAN status](https://www.r-pkg.org/badges/version/knitroff)](https://cran.r-project.org/package=knitroff)
+
 Dynamic reports in **troff**, with R. Write a report with the classic `-ms` macros, put R
 code between `.SS` and `.SE`, and knitroff runs it with
 [knitr](https://yihui.org/knitr/), then typesets the page with GNU groff. The output is a
@@ -40,6 +42,14 @@ existed in 1981, but nobody joined them until Sweave in 2002. knitroff is the sa
 for R and groff today, and it can do what 1981 couldn't: put the figures on the page.
 
 ## Installing
+
+From [CRAN](https://cran.r-project.org/package=knitroff):
+
+```r
+install.packages("knitroff")
+```
+
+Or the development version, from GitHub:
 
 ```r
 # install.packages("remotes")
