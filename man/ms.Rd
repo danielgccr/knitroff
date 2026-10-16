@@ -24,7 +24,7 @@ A knitroff document is troff with the ms macros, a package for papers, reports a
 }
 \section{Using the ms macros with knitroff}{
 \describe{
-\item{\verb{render_roff()}}{runs \verb{groff -ms -k -e -t -p}: the ms macros, UTF-8 input, and the eqn, tbl and pic preprocessors. \verb{refer} is not run, so \verb{.[} ... \verb{.]} citations are left as they are.}
+\item{\verb{render_roff()}}{runs \verb{groff -ms -k -R -e -t -p}: the ms macros, UTF-8 input, and the refer, eqn, tbl and pic preprocessors.}
 \item{\verb{.SS}, \verb{.SE}, \verb{.SR}}{are knitroff's, not ms's: knitroff replaces them before groff sees the document. ms has no macros with these names, so there is no clash.}
 \item{listings}{each R chunk becomes a \verb{.DS L} ... \verb{.DE} display in the constant-width font \verb{CR}, so it is kept together on one page.}
 \item{figures}{a plot becomes \verb{.PDFPIC -C} (PDF) or \verb{.PSPIC -C} (PostScript), centred, with its caption.}
@@ -115,7 +115,7 @@ Preprocessors find these tokens only at the start of a line, with nothing betwee
 \item{\verb{.TS [H]} ... \verb{.TE}}{a table for tbl (see \code{\link{tbl}}). With \verb{H}, the rows before \verb{.TH} repeat at the top of each page.}
 \item{\verb{.PS h v} ... \verb{.PE} or \verb{.PF}}{a pic diagram; \verb{.PF} ends it and returns to the top of the picture.}
 \item{\verb{.EQ [align [label]]} ... \verb{.EN}}{an equation for eqn (see \code{\link{eqn}}), centred unless align is \verb{L} or \verb{I}, with label at the right margin.}
-\item{\verb{.[} ... \verb{.]}}{a citation for refer, which \verb{render_roff()} does not run.}
+\item{\verb{.[} ... \verb{.]}}{a citation for refer: keywords that find one entry in the database named by \verb{database} between \verb{.R1} and \verb{.R2}. With \verb{accumulate} there, \verb{$LIST$} between \verb{.[} and \verb{.]} prints the references, under ms's own heading. The database path is relative to R's working directory.}
 }
 }
 

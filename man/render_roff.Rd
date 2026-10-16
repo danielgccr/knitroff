@@ -3,7 +3,7 @@
 \title{Knit an R troff document and typeset it with groff}
 \description{
 Knits the document with \code{\link{knit_roff}}, then runs
-\code{groff -ms -k -e -t -p}: the ms macros, UTF-8 input, and the eqn, tbl and pic
+\code{groff -ms -k -R -e -t -p}: the ms macros, UTF-8 input, and the refer, eqn, tbl and pic
 preprocessors.
 }
 \usage{

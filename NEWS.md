@@ -1,3 +1,8 @@
+# knitroff 0.1.1
+
+* `render_roff()` runs groff's `refer` (`groff -R`), so `.[` ... `.]` citations and
+  a bibliography from a refer database work. See "Bibliography" in the README and `?ms`.
+
 # knitroff 0.1.0
 
 * First release.

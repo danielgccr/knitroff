@@ -76,6 +76,18 @@ if (.Platform$OS.type == "unix") {
   stopifnot(grepl("groff-base", e))
 }
 
+# refer: a citation becomes a number, and $LIST$ prints the reference
+if (groff_available("utf8")) {
+  refs <- file.path(dir, "refs")
+  writeLines(c("%A M. E. Lesk", "%T Some Applications of Inverted Indexes on the UNIX System",
+               "%D 1978"), refs)
+  cite <- file.path(dir, "cite.Rms")
+  writeLines(c(".R1", paste("database", refs), "accumulate", ".R2", ".PP", "As Lesk wrote.",
+               ".[", "lesk inverted", ".]", ".[", "$LIST$", ".]"), cite)
+  out <- gsub("\033\\[[0-9;]*m", "", readLines(render_roff(cite, format = "utf8")))
+  stopifnot(any(grepl("wrote.[1]", out, fixed = TRUE)), any(grepl("Inverted", out, fixed = TRUE)))
+}
+
 example <- file.path(dir, "states.Rms")
 invisible(file.copy(system.file("examples", "states.Rms", package = "knitroff"), example))
 if (groff_available("utf8")) {

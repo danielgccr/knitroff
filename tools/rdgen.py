@@ -46,7 +46,7 @@ EXT = 'Marked entries are extensions: \\emph{(Berkeley)} from 4.2BSD, \\emph{(Te
 # ---------------------------------------------------------------- ms
 ms_sections = [
     section('Using the ms macros with knitroff', items([
-        (c('render_roff()'), 'runs ' + c('groff -ms -k -e -t -p') + ': the ms macros, UTF-8 input, and the eqn, tbl and pic preprocessors. ' + c('refer') + ' is not run, so ' + c('.[') + ' ... ' + c('.]') + ' citations are left as they are.'),
+        (c('render_roff()'), 'runs ' + c('groff -ms -k -R -e -t -p') + ': the ms macros, UTF-8 input, and the refer, eqn, tbl and pic preprocessors.'),
         (c('.SS') + ', ' + c('.SE') + ', ' + c('.SR'), 'are knitroff\'s, not ms\'s: knitroff replaces them before groff sees the document. ms has no macros with these names, so there is no clash.'),
         ('listings', 'each R chunk becomes a ' + c('.DS L') + ' ... ' + c('.DE') + ' display in the constant-width font ' + c('CR') + ', so it is kept together on one page.'),
         ('figures', 'a plot becomes ' + c('.PDFPIC -C') + ' (PDF) or ' + c('.PSPIC -C') + ' (PostScript), centred, with its caption.'),
@@ -109,7 +109,7 @@ ms_sections = [
         (c('.TS [H]') + ' ... ' + c('.TE'), 'a table for tbl (see ' + '\\code{\\link{tbl}}' + '). With ' + c('H') + ', the rows before ' + c('.TH') + ' repeat at the top of each page.'),
         (c('.PS h v') + ' ... ' + c('.PE') + ' or ' + c('.PF'), 'a pic diagram; ' + c('.PF') + ' ends it and returns to the top of the picture.'),
         (c('.EQ [align [label]]') + ' ... ' + c('.EN'), 'an equation for eqn (see ' + '\\code{\\link{eqn}}' + '), centred unless ' + t('align') + ' is ' + c('L') + ' or ' + c('I') + ', with ' + t('label') + ' at the right margin.'),
-        (c('.[') + ' ... ' + c('.]'), 'a citation for refer, which ' + c('render_roff()') + ' does not run.'),
+        (c('.[') + ' ... ' + c('.]'), 'a citation for refer: keywords that find one entry in the database named by ' + c('database') + ' between ' + c('.R1') + ' and ' + c('.R2') + '. With ' + c('accumulate') + ' there, ' + c('$LIST$') + ' between ' + c('.[') + ' and ' + c('.]') + ' prints the references, under ms\'s own heading. The database path is relative to R\'s working directory.'),
     ])),
     section('Footnotes', items([
         (c('\\**'), 'an automatically numbered footnote mark in the text. (Berkeley)'),

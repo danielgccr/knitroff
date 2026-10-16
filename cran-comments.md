@@ -1,16 +1,11 @@
-## Resubmission
+## Update
 
-The incoming pre-tests failed on Debian: groff was found, but it was Debian's
-`groff-base`, which has no ms macros, so the example and the tests that typeset failed.
-They now skip unless the new `groff_available()` can typeset an empty ms document with
-groff, and `render_roff()` stops with a message saying to install the full `groff`.
-Checked in a Debian container (r-base image) with only `groff-base`: Status OK.
+knitroff 0.1.1: `render_roff()` now also runs groff's refer preprocessor (`groff -R`), so
+documents can have citations and a bibliography.
 
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note
-
-* This is a new submission.
+0 errors | 0 warnings | 0 notes
 
 ## Notes for the reviewers
 
@@ -26,6 +21,4 @@ Checked in a Debian container (r-base image) with only `groff-base`: Status OK.
 
 ## Test environments
 
-* Arch Linux, R 4.6.1, groff 1.24.1
-* win-builder, R-devel (2026-10-05 r90641 ucrt), Windows, without groff: 1 NOTE (new submission)
-* Debian testing (Docker r-base), R release, groff-base 1.24.2 only: Status OK
+* Arch Linux, R 4.6.1, groff 1.24.1: 1 NOTE (days since last update)

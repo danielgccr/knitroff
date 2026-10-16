@@ -124,7 +124,8 @@ whole document, and a chunk can choose for itself with `.SS highlight=FALSE` or 
 Output is never highlighted.
 
 Everything else in the document goes to groff as it is, so `.EQ` equations, `.TS` tables
-and `.PS` pictures work as usual: `render_roff()` runs `groff -ms -k -e -t -p`.
+and `.PS` pictures work as usual, and so do `.[` citations: `render_roff()` runs
+`groff -ms -k -R -e -t -p`.
 
 ### Figures
 
@@ -152,6 +153,41 @@ numeric columns aligned, and an optional caption. Make it the value of a chunk:
 knitroff::roff_table(head(mtcars[, 1:3]), caption = "Three columns of mtcars")
 .SE
 ```
+
+### Bibliography
+
+groff's `refer`, Mike Lesk's preprocessor from the Seventh Edition, finds citations in a
+plain-text database of references, one per paragraph, with fields such as `%A` author,
+`%T` title, `%I` publisher and `%D` date:
+
+```
+%A R. A. Becker
+%A J. M. Chambers
+%T S: An Interactive Environment for Data Analysis and Graphics
+%I Wadsworth
+%D 1984
+```
+
+Name the database once, cite with a few keywords that find one entry, and list the
+references where they should go, which ms heads "References":
+
+```
+.R1
+database refs
+accumulate
+.R2
+.PP
+S was described by Becker and Chambers.
+.[
+becker interactive
+.]
+.[
+$LIST$
+.]
+```
+
+The citation becomes a number, `[1]`. The database path is relative to R's working
+directory, as for data files read in a chunk.
 
 ### Equations in the draft
 

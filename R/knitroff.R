@@ -203,7 +203,7 @@ knit_roff <- function(input, output = NULL, format = c("pdf", "ps", "utf8"), hig
   )
   text <- readLines(input, warn = FALSE, encoding = "UTF-8")
   text <- sr_requests(text[!grepl("^\\s*%\\s*\\\\Vignette", text)])   # R's vignette lines, not troff
-  preamble <- c(".\\\" troff from knitroff: groff -ms -k -e -t -p",
+  preamble <- c(".\\\" troff from knitroff: groff -ms -k -R -e -t -p",
                 ".if n .ftr CR R",               # a terminal has one width of type:
                 ".if n .ftr CB B",               # its bold and underlining stand for
                 ".if n .ftr CI I",               # constant-width bold and italic
@@ -258,9 +258,9 @@ render_roff <- function(input, output = NULL, format = c("pdf", "ps", "utf8"), h
   invisible(output)
 }
 
-# The ms macros, UTF-8 input, and the eqn, tbl and pic preprocessors.
+# The ms macros, UTF-8 input, and the refer, eqn, tbl and pic preprocessors.
 groff_args <- function(format) {
-  c("-ms", "-k", if (format != "utf8") "-e", "-t", "-p", if (format == "pdf") "-U", paste0("-T", format))
+  c("-ms", "-k", "-R", if (format != "utf8") "-e", "-t", "-p", if (format == "pdf") "-U", paste0("-T", format))
 }
 
 #' Can groff typeset a document here?
